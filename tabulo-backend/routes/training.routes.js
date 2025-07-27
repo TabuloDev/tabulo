@@ -7,10 +7,23 @@ const router = express.Router();
 router.post("/", async (req, res) => {
   try {
     const training = new Training(req.body);
-    const saved = await training.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    await training.save();
+    res.status(201).json(training);
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+});
+
+// GET /api/trainings/:id
+router.get("/:id", async (req, res) => {
+  try {
+    const training = await Training.findById(req.params.id);
+    if (!training) {
+      return res.status(404).json({ message: "Entraînement non trouvé" });
+    }
+    res.json(training);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 });
 

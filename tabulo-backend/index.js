@@ -15,16 +15,21 @@ app.use("/api/trainings", trainingRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`✅ Backend running on port ${PORT}`);
+if (process.env.NODE_ENV !== "test") {
+  mongoose
+    .connect(process.env.MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    })
+    .then(() => {
+      app.listen(PORT, () => {
+        console.log(`✅ Backend running on port ${PORT}`);
+      });
+    })
+    .catch((err) => {
+      console.error("❌ MongoDB connection error:", err.message);
     });
-  })
-  .catch((err) => {
-    console.error("❌ MongoDB connection error:", err.message);
-  });
+}
+
+// 👇 Exporter l'application pour les tests
+export default app;
