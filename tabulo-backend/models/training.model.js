@@ -8,6 +8,7 @@ const operationSchema = new mongoose.Schema({
 });
 
 const trainingSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
   selectedTables: { type: [Number], required: true },
   operations: { type: [operationSchema], required: true },
   score: { type: Number, required: true },

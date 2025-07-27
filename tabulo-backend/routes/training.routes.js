@@ -27,4 +27,19 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// GET /api/trainings?userId=...
+router.get("/", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    if (!userId) {
+      return res.status(400).json({ error: "Paramètre userId requis" });
+    }
+
+    const trainings = await Training.find({ userId }).sort({ finishedAt: -1 });
+    res.status(200).json(trainings);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 export default router;
