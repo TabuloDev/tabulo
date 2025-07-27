@@ -113,3 +113,58 @@ describe("GET /api/trainings?userId=", () => {
     });
   });
 });
+
+describe("GET /api/trainings/:userId/history", () => {
+  it("retourne l'historique des entraînements d'un utilisateur", async () => {
+    const userId = "user789";
+
+    // Création d'entraînements fictifs pour ce userId
+    const trainings = await Training.insertMany([
+      {
+        userId,
+        selectedTables: [2, 3],
+        operations: [
+          {
+            expression: "2 x 4",
+            userAnswer: "8",
+            isCorrect: true,
+            correction: "2 x 4 = 8",
+          },
+          {
+            expression: "3 x 3",
+            userAnswer: "10",
+            isCorrect: false,
+            correction: "3 x 3 = 9",
+          },
+        ],
+        score: 7.5,
+        finishedAt: new Date("2025-07-20T10:00:00Z"),
+      },
+      {
+        userId,
+        selectedTables: [7],
+        operations: [
+          {
+            expression: "7 x 6",
+            userAnswer: "42",
+            isCorrect: true,
+            correction: "7 x 6 = 42",
+          },
+        ],
+        score: 10,
+        finishedAt: new Date("2025-07-25T15:00:00Z"),
+      },
+    ]);
+
+    const res = await request(app)
+      .get(`/api/trainings/${userId}/history`)
+      .expect(200);
+
+    expect(res.body).toHaveLength(2);
+
+    // Le plus récent d'abord
+    expect(res.body[0].score).toBe(10);
+    expect(res.body[1].operations.length).toBe(2);
+    expect(res.body[1].operations[1].isCorrect).toBe(false);
+  });
+});
