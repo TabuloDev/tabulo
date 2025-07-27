@@ -1,0 +1,39 @@
+# 📁 Dossier racine
+
+# Ignorer tous les fichiers temporaires système
+.DS_Store
+Thumbs.db
+
+# 🧠 Backend (Node.js / Express)
+
+tabulo-backend/node_modules/
+tabulo-backend/.env
+tabulo-backend/coverage/
+tabulo-backend/logs/
+tabulo-backend/*.log
+
+# 🧠 Frontend (Flutter)
+
+tabulo-frontend/.dart_tool/
+tabulo-frontend/.packages
+tabulo-frontend/build/
+tabulo-frontend/.flutter-plugins
+tabulo-frontend/.flutter-plugins-dependencies
+tabulo-frontend/.idea/
+tabulo-frontend/.vscode/
+tabulo-frontend/pubspec.lock
+
+# Plates-formes spécifiques (souvent régénérées)
+tabulo-frontend/windows/
+tabulo-frontend/linux/
+tabulo-frontend/macos/
+tabulo-frontend/web/
+
+# Ignorer également les fichiers générés lors de tests
+tabulo-frontend/coverage/
+tabulo-frontend/test_output/
+
+# 🧪 Config temporaire ou test
+*.iml
+*.swp
+*.swo
