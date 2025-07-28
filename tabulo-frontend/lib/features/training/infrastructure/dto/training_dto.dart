@@ -1,3 +1,5 @@
+import 'package:tabulo/features/training/domain/entities/training.dart';
+
 class TrainingDto {
   final String id;
   final String userId;
@@ -27,5 +29,19 @@ class TrainingDto {
       'score': score,
       'finishedAt': finishedAt.toIso8601String(),
     };
+  }
+
+  /// Convertit ce DTO en entité de domaine Training
+  Training toDomain() {
+    return Training(
+      id: id,
+      questions: [],
+      operations: [],
+      selectedTables: [],
+      currentAnswer: '',
+      currentIndex: 0,
+      score: score,
+      finishedAt: finishedAt,
+    );
   }
 }
