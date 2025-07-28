@@ -14,9 +14,11 @@ class Operation {
   });
 
   factory Operation.fromJson(Map<String, dynamic> json) {
+    final rawUserAnswer = json['userAnswer'];
+
     return Operation(
       expression: json['expression'] as String,
-      userAnswer: json['userAnswer'] as String,
+      userAnswer: rawUserAnswer.toString(),
       isCorrect: json['isCorrect'] as bool,
       correctAnswer: json['correction'] != null
           ? json['correction'] as int

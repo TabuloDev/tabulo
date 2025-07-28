@@ -1,4 +1,5 @@
 // lib/features/training/domain/entities/training.dart
+
 import 'package:uuid/uuid.dart';
 import 'question.dart';
 import 'operation.dart';
@@ -47,27 +48,37 @@ class Training {
   }
 
   static Training empty() => Training(
-        id: 'empty',
-        questions: [],
-        operations: [],
-        selectedTables: [],
-        currentAnswer: '',
-        currentIndex: 0,
-        score: null,
-        finishedAt: null,
-      );
+    id: 'empty',
+    questions: [],
+    operations: [],
+    selectedTables: [],
+    currentAnswer: '',
+    currentIndex: 0,
+    score: null,
+    finishedAt: null,
+  );
 
-  /// Factory pour désérialiser un Training depuis du JSON
   factory Training.fromJson(Map<String, dynamic> json) {
+    final rawOps = json['operations'];
+    final operations = <Operation>[];
+
+    if (rawOps is List) {
+      for (final rawOp in rawOps) {
+        try {
+          operations.add(Operation.fromJson(Map<String, dynamic>.from(rawOp)));
+        } catch (_) {
+          // Ignored
+        }
+      }
+    }
+
     return Training(
       id: json['_id'] ?? const Uuid().v4(),
-      questions: [], // Les questions ne sont pas renvoyées par le backend
-      operations: (json['operations'] as List<dynamic>)
-          .map((op) => Operation.fromJson(op))
-          .toList(),
+      questions: [],
+      operations: operations,
       selectedTables: List<int>.from(json['selectedTables']),
-      currentAnswer: '', // Non renvoyé, car pas utile en historique
-      currentIndex: 0,   // Idem
+      currentAnswer: '',
+      currentIndex: 0,
       score: (json['score'] as num?)?.toDouble(),
       finishedAt: json['finishedAt'] != null
           ? DateTime.parse(json['finishedAt'])
@@ -75,11 +86,10 @@ class Training {
     );
   }
 
-  /// Méthode utile si tu veux renvoyer un Training vers le backend
   Map<String, dynamic> toJson() {
     return {
       '_id': id,
-      'questions': [], // volontairement vide
+      'questions': [],
       'operations': operations.map((op) => op.toJson()).toList(),
       'selectedTables': selectedTables,
       'currentAnswer': currentAnswer,
