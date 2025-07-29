@@ -7,43 +7,8 @@ import 'package:tabulo/features/training/domain/usecases/start_training_usecase.
 import 'package:tabulo/features/training/domain/usecases/submit_answer_usecase.dart';
 import 'package:tabulo/features/training/domain/usecases/finish_training_usecase.dart';
 import 'package:tabulo/features/training/presentation/providers/training_controller_provider.dart';
-
-class FakeTrainingRepository implements TrainingRepository {
-  final Map<String, Training> _storage = {};
-  int _counter = 0;
-
-  @override
-  Future<Training> save(Training training) async {
-    final id = training.id.isEmpty ? 't${_counter++}' : training.id;
-    final saved = training.copyWith(id: id);
-    _storage[id] = saved;
-    return saved;
-  }
-
-  @override
-  Future<Training?> findById(String id) async => _storage[id];
-
-  @override
-  Future<void> deleteAll() async => _storage.clear();
-
-  @override
-  Future<List<Training>> findAll({required String userId}) async =>
-      _storage.values.toList();
-
-  Future<Training> getById(String id) async {
-    final training = _storage[id];
-    if (training == null) throw Exception('Training not found');
-    return training;
-  }
-
-  Future<Training> update(Training training) async {
-    if (!_storage.containsKey(training.id)) {
-      throw Exception('Training not found');
-    }
-    _storage[training.id] = training;
-    return training;
-  }
-}
+import 'package:tabulo/features/training/application/usecases/send_training_usecase.dart';
+import '../../../mocks.mocks.dart'; // ✅ pour MockDio
 
 void main() {
   group('trainingControllerProvider', () {
@@ -71,6 +36,7 @@ void main() {
       final startTrainingUseCase = StartTrainingUseCase(repository);
       final submitAnswerUseCase = SubmitAnswerUseCase(repository);
       final finishTrainingUseCase = FinishTrainingUseCase(repository);
+      final sendTrainingUseCase = SendTrainingUseCase(MockDio()); // ✅
 
       container = ProviderContainer(
         overrides: [
@@ -80,6 +46,7 @@ void main() {
               startTrainingUseCase: startTrainingUseCase,
               submitAnswerUseCase: submitAnswerUseCase,
               finishTrainingUseCase: finishTrainingUseCase,
+              sendTrainingUseCase: sendTrainingUseCase,
             );
             controller.state = training;
             return controller;
@@ -169,5 +136,43 @@ extension PumpUntil on ProviderContainer {
       }
       await Future.delayed(step);
     }
+  }
+}
+
+// Implémentation du FakeTrainingRepository utilisée dans les tests
+class FakeTrainingRepository implements TrainingRepository {
+  final Map<String, Training> _storage = {};
+  int _counter = 0;
+
+  @override
+  Future<Training> save(Training training) async {
+    final id = training.id.isEmpty ? 't${_counter++}' : training.id;
+    final saved = training.copyWith(id: id);
+    _storage[id] = saved;
+    return saved;
+  }
+
+  @override
+  Future<Training?> findById(String id) async => _storage[id];
+
+  @override
+  Future<void> deleteAll() async => _storage.clear();
+
+  @override
+  Future<List<Training>> findAll({required String userId}) async =>
+      _storage.values.toList();
+
+  Future<Training> getById(String id) async {
+    final training = _storage[id];
+    if (training == null) throw Exception('Training not found');
+    return training;
+  }
+
+  Future<Training> update(Training training) async {
+    if (!_storage.containsKey(training.id)) {
+      throw Exception('Training not found');
+    }
+    _storage[training.id] = training;
+    return training;
   }
 }

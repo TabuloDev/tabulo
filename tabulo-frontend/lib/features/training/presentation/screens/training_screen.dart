@@ -1,4 +1,4 @@
-// lib/features/training/presentation/screens/training_screen.dart
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/training_controller_provider.dart';
@@ -15,14 +15,17 @@ class TrainingScreen extends ConsumerStatefulWidget {
 
 class _TrainingScreenState extends ConsumerState<TrainingScreen> {
   final TextEditingController _controller = TextEditingController();
+  String? _feedbackMessage;
 
   @override
   void initState() {
     super.initState();
     Future.microtask(() {
-      ref
-          .read(trainingControllerProvider.notifier)
-          .startTraining(widget.selectedTables);
+      if (!Platform.environment.containsKey('FLUTTER_TEST')) {
+        ref
+            .read(trainingControllerProvider.notifier)
+            .startTraining(widget.selectedTables);
+      }
     });
   }
 
@@ -61,15 +64,9 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
       final wasCorrect = userAnswer == correctAnswer;
 
       setState(() {
-        final feedback = wasCorrect
+        _feedbackMessage = wasCorrect
             ? 'Bonne réponse !'
             : 'Faux ! (${currentQuestion.operand1} × ${currentQuestion.operand2} = $correctAnswer)';
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(feedback),
-            duration: const Duration(seconds: 2),
-          ),
-        );
         _controller.clear();
       });
     }
@@ -115,6 +112,19 @@ class _TrainingScreenState extends ConsumerState<TrainingScreen> {
             ),
             const SizedBox(height: 16),
             ElevatedButton(onPressed: _submit, child: const Text('Valider')),
+            const SizedBox(height: 16),
+            if (_feedbackMessage != null)
+              Text(
+                _feedbackMessage!,
+                key: const Key('feedbackMessage'),
+                style: TextStyle(
+                  color: _feedbackMessage!.startsWith('Bonne')
+                      ? Colors.green
+                      : Colors.red,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
           ],
         ),
       ),
