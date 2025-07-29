@@ -42,17 +42,4 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /api/trainings/:userId/history
-router.get("/:userId/history", async (req, res) => {
-  try {
-    const { userId } = req.params;
-
-    const trainings = await Training.find({ userId }).sort({ finishedAt: -1 });
-
-    res.status(200).json(trainings);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 export default router;
