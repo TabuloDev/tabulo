@@ -39,6 +39,7 @@ dependencies:
   hooks_riverpod: ^2.4.0
   collection: ^1.18.0
   dio: ^5.4.0
+  intl: ^0.18.1
 
 dev_dependencies:
   flutter_test:
