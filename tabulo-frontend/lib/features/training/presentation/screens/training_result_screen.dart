@@ -12,15 +12,16 @@ class TrainingResultScreen extends StatelessWidget {
     final message = score >= 8
         ? 'Excellent travail ! 👏'
         : score >= 5
-            ? 'Bien joué, continue comme ça ! 💪'
-            : 'Tu progresses, recommence pour t’améliorer ! 🚀';
+        ? 'Bien joué, continue comme ça ! 💪'
+        : 'Tu progresses, recommence pour t’améliorer ! 🚀';
 
     return Scaffold(
       appBar: AppBar(title: const Text('Résultat de l\'entraînement')),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
               'Score : ${score.toStringAsFixed(1)} / 10',
@@ -34,11 +35,39 @@ class TrainingResultScreen extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.pop(context); // ou remplacer selon ta navigation
-              },
-              child: const Text('Retour à l\'accueil'),
+            const Text(
+              'Détail des réponses :',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            ...training.operations.map(
+              (op) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${op.expression} = ${op.userAnswer} → ${op.isCorrect ? '✔' : '✘'}',
+                    style: TextStyle(
+                      color: op.isCorrect ? Colors.green : Colors.red,
+                      fontSize: 16,
+                    ),
+                  ),
+                  if (!op.isCorrect && op.correctAnswer != null)
+                    Text(
+                      'Correction : ${op.expression} = ${op.correctAnswer}',
+                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                    ),
+                  const SizedBox(height: 12),
+                ],
+              ),
+            ),
+            const SizedBox(height: 32),
+            Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: const Text('Retour à l\'accueil'),
+              ),
             ),
           ],
         ),
