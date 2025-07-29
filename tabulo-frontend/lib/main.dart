@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'features/training/presentation/screens/table_selection_screen.dart';
+import 'package:tabulo/features/child/presentation/screens/child_home_screen.dart';
 import 'features/training/application/providers/training_repository_provider.dart';
 import 'features/training/infrastructure/repositories/in_memory_training_repository.dart';
 
@@ -26,7 +26,7 @@ class TabuloApp extends StatelessWidget {
       title: 'Tabulo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.indigo),
-      home: const TableSelectionScreen(),
+      home: const ChildHomeScreen(),
     );
   }
 }
