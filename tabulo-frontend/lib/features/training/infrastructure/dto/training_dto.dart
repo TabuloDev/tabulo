@@ -1,4 +1,4 @@
-// lib/features/training/infrastructure/dto/training_dto.dart
+// lib/features/training/infrastructure/dto/training_dto.dart 
 import 'package:tabulo/features/training/domain/entities/operation.dart';
 import 'package:tabulo/features/training/domain/entities/training.dart';
 
@@ -57,6 +57,20 @@ class TrainingDto {
       currentIndex: 0,
       score: score,
       finishedAt: finishedAt,
+    );
+  }
+
+  factory TrainingDto.fromDomain(Training training) {
+    assert(training.score != null, 'training.score ne doit pas être null');
+    assert(training.finishedAt != null, 'training.finishedAt ne doit pas être null');
+
+    return TrainingDto(
+      id: training.id,
+      userId: training.id, // ⚠️ à adapter plus tard avec le vrai userId
+      score: training.score ?? 0.0,
+      finishedAt: training.finishedAt ?? DateTime.now(),
+      selectedTables: training.selectedTables,
+      operations: training.operations,
     );
   }
 
