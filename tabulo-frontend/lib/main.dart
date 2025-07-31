@@ -1,11 +1,14 @@
+// lib/main.dart
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:tabulo/features/child/presentation/screens/child_home_screen.dart';
 import 'package:tabulo/features/child/presentation/screens/training_detail_screen.dart';
-import 'features/training/application/providers/training_repository_provider.dart';
-import 'features/training/infrastructure/repositories/in_memory_training_repository.dart';
-import 'core/env.dart'; // ← pour accéder à baseUrl et tester sa validité
+import 'package:tabulo/features/training/application/providers/training_repository_provider.dart';
+import 'package:tabulo/features/training/infrastructure/repositories/http_training_repository.dart';
+import 'package:tabulo/core/dio_client.dart';
+import 'package:tabulo/core/env.dart'; // ← pour accéder à baseUrl et tester sa validité
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +23,7 @@ void main() {
     ProviderScope(
       overrides: [
         trainingRepositoryProvider.overrideWithValue(
-          inMemoryTrainingRepository,
+          HttpTrainingRepository(dio: DioClient().dio),
         ),
       ],
       child: const TabuloApp(),
