@@ -9,12 +9,12 @@ class SendTrainingUseCase {
 
   Future<bool> call(Training training) async {
     final dto = TrainingDto.fromDomain(training);
+    final url = '/api/trainings';
 
     try {
-      final response = await dio.post('/api/trainings', data: dto.toJson());
-
+      final response = await dio.post(url, data: dto.toJson());
       return response.statusCode == 201;
-    } catch (e) {
+    } catch (_) {
       return false;
     }
   }

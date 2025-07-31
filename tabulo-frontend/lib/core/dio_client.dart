@@ -1,17 +1,24 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tabulo/core/env.dart';
 
 class DioClient {
   static final DioClient _instance = DioClient._internal();
 
-  factory DioClient() => _instance;
+  factory DioClient() {
+    return _instance;
+  }
 
   late final Dio dio;
 
   DioClient._internal() {
+    if (baseUrl.trim().isEmpty) {
+      assert(false, '💥 baseUrl est vide dans dio_client.dart !');
+    }
+
     dio = Dio(
       BaseOptions(
-        baseUrl: 'http://localhost:5000/api', // à adapter selon l'environnement
+        baseUrl: baseUrl,
         connectTimeout: const Duration(seconds: 5),
         receiveTimeout: const Duration(seconds: 5),
         sendTimeout: const Duration(seconds: 5),
@@ -23,7 +30,6 @@ class DioClient {
       LogInterceptor(requestBody: true, responseBody: true),
       InterceptorsWrapper(
         onRequest: (options, handler) {
-          // TODO: Ajouter le token JWT ici lorsqu'il sera disponible
           return handler.next(options);
         },
       ),
@@ -33,5 +39,6 @@ class DioClient {
 
 /// Provider global Riverpod pour injecter le client Dio
 final dioProvider = Provider<Dio>((ref) {
-  return DioClient().dio;
+  final dio = DioClient().dio;
+  return dio;
 });

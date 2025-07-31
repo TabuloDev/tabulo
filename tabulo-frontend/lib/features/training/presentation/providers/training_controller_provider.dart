@@ -54,7 +54,7 @@ class TrainingController extends StateNotifier<Training?> {
       final finished = await finishTrainingUseCase(updated);
       state = finished;
 
-      // 📨 Envoi vers le backend
+      // ✅ Envoi unique ici
       await sendTrainingUseCase(finished);
     } else {
       state = updated;
@@ -79,19 +79,19 @@ class TrainingController extends StateNotifier<Training?> {
 
 final trainingControllerProvider =
     StateNotifierProvider<TrainingController, Training?>((ref) {
-  final repository = ref.read(training_repo.trainingRepositoryProvider);
-  final startTrainingUseCase = ref.read(
-    start_usecase.startTrainingUseCaseProvider,
-  );
-  final submitAnswerUseCase = ref.read(submitAnswerUseCaseProvider);
-  final finishTrainingUseCase = FinishTrainingUseCase(repository);
-  final sendTrainingUseCase = ref.read(sendTrainingUseCaseProvider);
+      final repository = ref.read(training_repo.trainingRepositoryProvider);
+      final startTrainingUseCase = ref.read(
+        start_usecase.startTrainingUseCaseProvider,
+      );
+      final submitAnswerUseCase = ref.read(submitAnswerUseCaseProvider);
+      final finishTrainingUseCase = FinishTrainingUseCase(repository);
+      final sendTrainingUseCase = ref.read(sendTrainingUseCaseProvider);
 
-  return TrainingController(
-    repository: repository,
-    startTrainingUseCase: startTrainingUseCase,
-    submitAnswerUseCase: submitAnswerUseCase,
-    finishTrainingUseCase: finishTrainingUseCase,
-    sendTrainingUseCase: sendTrainingUseCase,
-  );
-});
+      return TrainingController(
+        repository: repository,
+        startTrainingUseCase: startTrainingUseCase,
+        submitAnswerUseCase: submitAnswerUseCase,
+        finishTrainingUseCase: finishTrainingUseCase,
+        sendTrainingUseCase: sendTrainingUseCase,
+      );
+    });

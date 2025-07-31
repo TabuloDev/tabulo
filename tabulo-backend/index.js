@@ -23,7 +23,7 @@ if (process.env.NODE_ENV !== "test") {
     .connect(MONGO_URI)
     .then(() => {
       console.log("✅ Connecté à MongoDB");
-      app.listen(PORT, () => {
+      app.listen(PORT, "0.0.0.0", () => {
         console.log(`✅ Backend running on port ${PORT}`);
       });
     })

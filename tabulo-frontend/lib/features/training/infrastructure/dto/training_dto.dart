@@ -1,4 +1,4 @@
-// lib/features/training/infrastructure/dto/training_dto.dart 
+// lib/features/training/infrastructure/dto/training_dto.dart
 import 'package:tabulo/features/training/domain/entities/operation.dart';
 import 'package:tabulo/features/training/domain/entities/training.dart';
 
@@ -38,7 +38,7 @@ class TrainingDto {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
+      // '_id': id, // ❌ supprimé car incompatible avec ObjectId
       'userId': userId,
       'score': score,
       'finishedAt': finishedAt.toIso8601String(),
@@ -62,7 +62,10 @@ class TrainingDto {
 
   factory TrainingDto.fromDomain(Training training) {
     assert(training.score != null, 'training.score ne doit pas être null');
-    assert(training.finishedAt != null, 'training.finishedAt ne doit pas être null');
+    assert(
+      training.finishedAt != null,
+      'training.finishedAt ne doit pas être null',
+    );
 
     return TrainingDto(
       id: training.id,

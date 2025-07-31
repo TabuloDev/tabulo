@@ -1,13 +1,15 @@
+// lib/features/training/presentation/screens/training_result_screen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/entities/training.dart';
 
-class TrainingResultScreen extends StatelessWidget {
+class TrainingResultScreen extends ConsumerWidget {
   final Training training;
 
   const TrainingResultScreen({super.key, required this.training});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final score = training.score!;
     final message = score >= 8
         ? 'Excellent travail ! 👏'
@@ -19,57 +21,65 @@ class TrainingResultScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Résultat de l\'entraînement')),
       body: Padding(
         padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Text(
-              'Score : ${score.toStringAsFixed(1)} / 10',
-              style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              message,
-              style: const TextStyle(fontSize: 20),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 40),
-            const Text(
-              'Détail des réponses :',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 16),
-            ...training.operations.map(
-              (op) => Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${op.expression} = ${op.userAnswer} → ${op.isCorrect ? '✔' : '✘'}',
-                    style: TextStyle(
-                      color: op.isCorrect ? Colors.green : Colors.red,
-                      fontSize: 16,
-                    ),
-                  ),
-                  if (!op.isCorrect && op.correctAnswer != null)
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Text(
+                'Score : ${score.toStringAsFixed(1)} / 10',
+                style: const TextStyle(
+                  fontSize: 32,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                message,
+                style: const TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 40),
+              const Text(
+                'Détail des réponses :',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              ...training.operations.map(
+                (op) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                     Text(
-                      'Correction : ${op.expression} = ${op.correctAnswer}',
-                      style: const TextStyle(fontSize: 14, color: Colors.grey),
+                      '${op.expression} = ${op.userAnswer} → ${op.isCorrect ? '✔' : '✘'}',
+                      style: TextStyle(
+                        color: op.isCorrect ? Colors.green : Colors.red,
+                        fontSize: 16,
+                      ),
                     ),
-                  const SizedBox(height: 12),
-                ],
+                    if (!op.isCorrect && op.correctAnswer != null)
+                      Text(
+                        'Correction : ${op.expression} = ${op.correctAnswer}',
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    const SizedBox(height: 12),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(height: 32),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: const Text('Retour à l\'accueil'),
+              const SizedBox(height: 32),
+              Center(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Retour à l\'accueil'),
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
